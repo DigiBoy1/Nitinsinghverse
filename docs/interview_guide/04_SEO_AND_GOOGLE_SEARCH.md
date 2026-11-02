@@ -58,3 +58,4 @@ Once deployed on Vercel:
 5. In the top search bar, paste your homepage URL and click **"Request Indexing"**.
 
 Googlebot will prioritize crawling your site, typically indexing it within 24–48 hours.
+

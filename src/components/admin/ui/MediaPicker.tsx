@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useMedia, MediaFile } from '@/hooks/useMedia'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { X, UploadCloud, File, Trash2, Check, Copy } from 'lucide-react'
+import { X, UploadCloud, File, Trash2, Check, Copy, Eye, FileText, Film } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 
@@ -70,45 +70,79 @@ export function MediaPicker({ onSelect, onClose }: MediaPickerProps) {
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {files.map((file) => {
                 const url = getPublicUrl(file.name)
-                const isImage = file.metadata.mimetype?.startsWith('image/')
+                const isImage = file.metadata?.mimetype?.startsWith('image/') || /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(file.name)
+                const isPdf = file.metadata?.mimetype === 'application/pdf' || /\.pdf$/i.test(file.name)
+                const isVideo = file.metadata?.mimetype?.startsWith('video/') || /\.(mp4|webm|mov)$/i.test(file.name)
+
                 return (
                   <Card key={file.id} className="group relative overflow-hidden bg-zinc-900 hover:border-zinc-500 cursor-pointer transition-colors">
                     <div 
-                      className="aspect-square flex items-center justify-center bg-zinc-800 p-2"
+                      className="aspect-square flex items-center justify-center bg-zinc-800/80 p-2 overflow-hidden"
                       onClick={() => onSelect(url)}
                     >
                       {isImage ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img src={url} alt={file.name} className="h-full w-full object-cover rounded-md" />
+                      ) : isPdf ? (
+                        <div className="flex flex-col items-center justify-center space-y-2 p-2 text-center">
+                          <div className="relative flex items-center justify-center">
+                            <FileText className="h-14 w-14 text-rose-500 transition-transform group-hover:scale-105" />
+                            <span className="absolute -bottom-1 rounded bg-rose-600 px-1.5 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider shadow-sm">
+                              PDF
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-zinc-400 font-mono truncate max-w-[110px] block mt-1">
+                            {file.name}
+                          </span>
+                        </div>
+                      ) : isVideo ? (
+                        <div className="relative h-full w-full flex items-center justify-center bg-zinc-950">
+                          <Film className="h-10 w-10 text-cyan-400" />
+                          <span className="absolute bottom-1 right-1 rounded bg-zinc-800 px-1 py-0.5 text-[8px] text-zinc-300 uppercase">VIDEO</span>
+                        </div>
                       ) : (
                         <File className="h-10 w-10 text-zinc-500" />
                       )}
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 text-xs text-white truncate opacity-0 transition-opacity group-hover:opacity-100 flex justify-between items-center">
-                      <span className="truncate">{file.name}</span>
-                      <div className="flex shrink-0">
+                    <div className="absolute inset-x-0 bottom-0 bg-black/80 backdrop-blur-sm p-2 text-xs text-white truncate opacity-0 transition-opacity group-hover:opacity-100 flex justify-between items-center">
+                      <span className="truncate pr-1 text-[11px]" title={file.name}>{file.name}</span>
+                      <div className="flex shrink-0 items-center">
                         <Button 
-                          variant="secondary" 
+                          variant="ghost" 
                           size="icon" 
-                          className="h-6 w-6 ml-2 bg-zinc-700 hover:bg-zinc-600 text-white" 
+                          className="h-6 w-6 text-zinc-300 hover:text-white hover:bg-zinc-700" 
+                          title="Open / Preview in new tab"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            window.open(url, '_blank')
+                          }}
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-6 w-6 text-zinc-300 hover:text-white hover:bg-zinc-700" 
+                          title="Copy URL"
                           onClick={(e) => {
                             e.stopPropagation()
                             navigator.clipboard.writeText(url)
                             toast.success('Copied URL to clipboard')
                           }}
                         >
-                          <Copy className="h-3 w-3" />
+                          <Copy className="h-3.5 w-3.5" />
                         </Button>
                         <Button 
-                          variant="destructive" 
+                          variant="ghost" 
                           size="icon" 
-                          className="h-6 w-6 ml-1" 
+                          className="h-6 w-6 text-red-400 hover:text-red-300 hover:bg-red-950/50" 
+                          title="Delete"
                           onClick={(e) => {
                             e.stopPropagation()
                             if (confirm('Delete this file?')) deleteFile(file.name)
                           }}
                         >
-                          <Trash2 className="h-3 w-3" />
+                          <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </div>
                     </div>
