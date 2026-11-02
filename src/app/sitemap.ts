@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { getPublicResource } from '@/lib/api/publicData'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nitinsinghverse.com'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nitinsinghverse.vercel.app'
 
   // Fetch all visible projects for dynamic routes
   const projects = await getPublicResource<any[]>('projects') || []

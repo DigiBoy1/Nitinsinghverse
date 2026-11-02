@@ -13,6 +13,7 @@
 | **[01. Architecture & Hosting](./01_ARCHITECTURE_AND_HOSTING.md)** | Zero-Cost Infrastructure | Vercel Serverless + Supabase BaaS, avoiding cold starts, scaling, viva Q&A |
 | **[02. Media & Video Strategy](./02_MEDIA_AND_VIDEO_STRATEGY.md)** | Egress & Streaming | YouTube unlisted privacy embeds (`rel=0`), why no ads appear, Cloudinary WebM loops |
 | **[03. Security & Git Strategy](./03_SECURITY_AUTH_AND_GIT.md)** | Authentication & Isolation | PostgreSQL Row Level Security (RLS), defense-in-depth, `.env` isolation, private repo security |
+| **[04. SEO & Google Search](./04_SEO_AND_GOOGLE_SEARCH.md)** | Discovery & Ranking | Googlebot crawling, JSON-LD Schema.org, sitemap/robots, Google Search Console index request |
 
 ---
 

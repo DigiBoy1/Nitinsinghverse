@@ -1,12 +1,14 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nitinsinghverse.vercel.app'
+
   return {
     rules: {
       userAgent: '*',
       allow: '/',
       disallow: ['/admin/', '/api/admin/'],
     },
-    sitemap: 'https://nitinsinghverse.com/sitemap.xml', // Replace with dynamic env if needed
+    sitemap: `${baseUrl}/sitemap.xml`,
   }
 }

@@ -16,25 +16,50 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPublicResource<any>('site_settings', { single: true })
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nitinsinghverse.vercel.app'
   
-  if (!settings) {
-    return {
-      title: "Nitin Singh | AI/ML Student · Full-Stack Developer",
-      description: "Portfolio of Nitin Singh, showcasing AI/ML projects, full-stack applications, and interactive 3D experiences.",
-    }
-  }
+  const siteTitle = settings?.title || "NITINSINGHVERSE | Nitin Singh — AI/ML & Full-Stack Developer"
+  const siteDesc = settings?.description || "Explore NITINSINGHVERSE, the personal portfolio of Nitin Singh showcasing AI/ML projects, full-stack web applications, and interactive 3D experiences."
 
   return {
+    metadataBase: new URL(baseUrl),
     title: {
-      template: `%s | ${settings.title || 'Nitin Singh'}`,
-      default: settings.title || "Nitin Singh | AI/ML Student · Full-Stack Developer",
+      template: `%s | ${settings?.title || 'NITINSINGHVERSE'}`,
+      default: siteTitle,
     },
-    description: settings.description || "Portfolio of Nitin Singh",
+    description: siteDesc,
+    keywords: [
+      "nitinsinghverse",
+      "nitin singh verse",
+      "nitinsingh",
+      "Nitin Singh",
+      "Nitin Singh Portfolio",
+      "Nitin Singh Developer",
+      "AI/ML Developer",
+      "Full Stack Developer Portfolio",
+      "Next.js 3D Portfolio"
+    ],
+    authors: [{ name: "Nitin Singh", url: "https://github.com/DigiBoy1" }],
+    creator: "Nitin Singh",
     openGraph: {
-      images: settings.og_image ? [settings.og_image] : [],
+      title: siteTitle,
+      description: siteDesc,
+      url: baseUrl,
+      siteName: "NITINSINGHVERSE",
+      locale: "en_US",
+      type: "website",
+      images: settings?.og_image ? [{ url: settings.og_image }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteTitle,
+      description: siteDesc,
     },
     icons: {
-      icon: settings.favicon || '/favicon.ico',
+      icon: settings?.favicon || '/favicon.ico',
+    },
+    alternates: {
+      canonical: baseUrl,
     }
   }
 }
@@ -44,11 +69,31 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://nitinsinghverse.vercel.app'
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Nitin Singh',
+    alternateName: ['nitinsinghverse', 'NITINSINGHVERSE', 'DigiBoy1'],
+    url: baseUrl,
+    jobTitle: 'AI/ML Student & Full-Stack Developer',
+    description: 'Portfolio of Nitin Singh (NITINSINGHVERSE), showcasing AI/ML projects, full-stack applications, and interactive 3D experiences.',
+    sameAs: [
+      'https://github.com/DigiBoy1',
+    ],
+  }
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
         <Toaster position="bottom-right" />
